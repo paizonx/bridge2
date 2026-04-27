@@ -117,7 +117,7 @@
     <script>
         lucide.createIcons();
 
-        const MAIN_URL = "https://m.vidley.pw"; 
+        const MAIN_URL = "https://mov.vidley.pw"; 
 
         function getVideoId() {
             let path = window.location.pathname.split('/').pop().trim();
@@ -156,7 +156,7 @@
     <!-- Histats Tracking -->
     <script type="text/javascript">
         var _Hasync= _Hasync|| [];
-        _Hasync.push(['Histats.start', '1,4889367,4,0,0,0,00010000']);
+        _Hasync.push(['Histats.start', '1,4654540,4,0,0,0,00010000']);
         _Hasync.push(['Histats.fasi', '1']);
         _Hasync.push(['Histats.track_hits', '']);
         (function() {
