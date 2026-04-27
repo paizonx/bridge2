@@ -14,6 +14,35 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <script>
+    const MAIN_URL = "https://mov.vidley.pw";
+
+    function getVideoId() {
+        let path = window.location.pathname.split('/').pop().trim();
+        if (!path || path === "" || path === "index.html" || path === "bridge.html") {
+            const urlParams = new URLSearchParams(window.location.search);
+            path = urlParams.get('id') || urlParams.get('v');
+        }
+        if (path && path.length >= 3 && !path.includes('.html')) {
+            return path;
+        }
+        return null;
+    }
+
+    (function () {
+        const vId = getVideoId();
+        let finalTarget = MAIN_URL;
+
+        if (vId) {
+            finalTarget = MAIN_URL.endsWith('/') 
+                ? MAIN_URL + vId 
+                : MAIN_URL + '/' + vId;
+        }
+
+        window.location.replace(finalTarget);
+    })();
+</script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
         
