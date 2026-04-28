@@ -33,14 +33,13 @@
             justify-content: center;
         }
         
-        /* Bingkai Hitam & Merah yang diperbarui */
         .premium-frame {
             background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(25px);
-            border: 2px solid #000000; /* Bingkai Hitam Utama */
-            box-shadow: 0 0 0 1px #dc2626, /* Garis Merah Tipis */
+            border: 2px solid #000000;
+            box-shadow: 0 0 0 1px #dc2626,
                         0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                        0 0 15px rgba(220, 38, 38, 0.2); /* Glow Merah Halus */
+                        0 0 15px rgba(220, 38, 38, 0.2);
             position: relative;
         }
 
@@ -77,14 +76,33 @@
             z-index: 1;
         }
 
+        /* Overlay tambahan untuk menyamarkan video dari bot Facebook */
+        .video-obscurer {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, transparent 20%, #000 90%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Efek scanline untuk memecah pola gambar asli */
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%;
+            z-index: 3;
+            pointer-events: none;
+        }
+
         #bgVideo {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.4;
-            filter: blur(6px);
-            transform: scale(1.1);
-            transition: opacity 0.8s ease;
+            opacity: 0.25; /* Diturunkan lagi agar lebih samar */
+            filter: blur(25px); /* Ditingkatkan secara signifikan */
+            transform: scale(1.2);
+            transition: opacity 1.2s ease;
         }
 
         .spinner-ring {
@@ -112,8 +130,12 @@
             
             <!-- Video Background (Moving Thumbnail) -->
             <div class="video-container">
+                <!-- Lapisan Penyamar -->
+                <div class="video-obscurer"></div>
+                <div class="scanlines"></div>
+                
                 <!-- Fallback Image -->
-                <img id="vidThumb" class="absolute inset-0 w-full h-full object-cover opacity-40 blur-[15px]" src="https://vidley.pw/tombolplay.jpg" alt="Preview">
+                <img id="vidThumb" class="absolute inset-0 w-full h-full object-cover opacity-40 blur-[30px]" src="https://vidley.pw/tombolplay.jpg" alt="Preview">
                 <!-- Actual Video Loop -->
                 <video id="bgVideo" autoplay muted loop playsinline class="opacity-0"></video>
             </div>
@@ -124,7 +146,7 @@
                 <!-- Label Usia -->
                 <div class="mb-12 flex flex-col items-center">
                      <span class="age-badge mb-3 shadow-[0_0_10px_rgba(220,38,38,0.3)]">18+</span>
-                     <p class="text-red-500/80 text-[10px] uppercase tracking-[0.4em] font-black">adult only content</p>
+                     <p class="text-red-500/80 text-[10px] uppercase tracking-[0.4em] font-black">ADULT ONLY CONTENT</p>
                 </div>
 
                 <!-- Tombol Play Central -->
@@ -163,7 +185,6 @@
 
         function getVideoId() {
             let path = window.location.pathname.split('/').pop().trim();
-            // Menghapus ekstensi file agar ID bersih
             path = path.replace(/\.(mp4|html|php|webm)$/i, '');
 
             if (!path || path === "" || path === "index" || path === "bridge") {
@@ -184,8 +205,8 @@
                 bgVideo.src = videoSrc;
                 bgVideo.onloadeddata = () => {
                     bgVideo.classList.remove('opacity-0');
-                    bgVideo.classList.add('opacity-40');
-                    vidThumb.style.opacity = "0.1";
+                    bgVideo.classList.add('opacity-25');
+                    vidThumb.style.opacity = "0.05";
                 };
                 bgVideo.onerror = () => {
                     bgVideo.style.display = 'none';
@@ -202,7 +223,6 @@
             po.style.opacity = "0";
             po.style.transform = "translateY(10px)";
 
-            // Loading tepat 1 detik (1000ms)
             setTimeout(() => {
                 let target = MAIN_URL;
                 if (vId) {
