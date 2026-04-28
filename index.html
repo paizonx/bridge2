@@ -33,14 +33,13 @@
             justify-content: center;
         }
         
-        /* Bingkai Hitam & Merah yang diperbarui */
         .premium-frame {
             background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(20px);
-            border: 2px solid #000000; /* Bingkai Hitam Utama */
-            box-shadow: 0 0 0 1px #dc2626, /* Garis Merah Tipis */
+            backdrop-filter: blur(25px);
+            border: 2px solid #000000;
+            box-shadow: 0 0 0 1px #dc2626,
                         0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                        0 0 15px rgba(220, 38, 38, 0.2); /* Glow Merah Halus */
+                        0 0 15px rgba(220, 38, 38, 0.2);
             position: relative;
         }
 
@@ -77,14 +76,32 @@
             z-index: 1;
         }
 
+        .video-obscurer {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, transparent 20%, #000 90%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* ----- EDIT BLUR VIDEO DI BAWAH INI ----- */
         #bgVideo {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.4;
-            filter: blur(6px);
-            transform: scale(1.1);
-            transition: opacity 0.8s ease;
+            opacity: 0.25; 
+            filter: blur(15px); /* <--- Ubah nilai PX ini */
+            transform: scale(1.2);
+            transition: opacity 1.2s ease;
         }
 
         .spinner-ring {
@@ -105,40 +122,35 @@
 </head>
 <body class="p-4">
 
-    <!-- Container Utama dengan Bingkai Hitam-Merah -->
     <div class="w-full max-w-[370px] premium-frame rounded-[2rem] overflow-hidden transition-all duration-500">
         
         <div id="videoArea" class="relative w-full h-[500px] bg-black overflow-hidden flex items-center justify-center cursor-pointer group click-effect">
             
-            <!-- Video Background (Moving Thumbnail) -->
             <div class="video-container">
-                <!-- Fallback Image -->
-                <img id="vidThumb" class="absolute inset-0 w-full h-full object-cover opacity-40 blur-[15px]" src="https://vidley.pw/tombolplay.jpg" alt="Preview">
-                <!-- Actual Video Loop -->
+                <div class="video-obscurer"></div>
+                <div class="scanlines"></div>
+                
+                <!-- Blur gambar fallback juga bisa diubah di class blur-[30px] -->
+                <img id="vidThumb" class="absolute inset-0 w-full h-full object-cover opacity-40 blur-[30px]" src="https://vidley.pw/tombolplay.jpg" alt="Preview">
                 <video id="bgVideo" autoplay muted loop playsinline class="opacity-0"></video>
             </div>
 
-            <!-- Overlay Konten -->
             <div id="playOverlay" class="relative z-20 flex flex-col items-center justify-center transition-all duration-500">
                 
-                <!-- Label Usia -->
                 <div class="mb-12 flex flex-col items-center">
                      <span class="age-badge mb-3 shadow-[0_0_10px_rgba(220,38,38,0.3)]">18+</span>
-                     <p class="text-red-500/80 text-[10px] uppercase tracking-[0.4em] font-black">adult only content</p>
+                     <p class="text-red-500/80 text-[10px] uppercase tracking-[0.4em] font-black">ADULT ONLY CONTENT</p>
                 </div>
 
-                <!-- Tombol Play Central -->
                 <div id="iconBox" class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(220,38,38,0.4)] pulse-red group-hover:scale-110 transition-all duration-300">
                     <i data-lucide="play" class="w-9 h-9 text-white fill-current ml-1"></i>
                 </div>
 
-                <!-- Info Deskripsi -->
                 <div class="mt-12 text-center px-6">
                     <p class="text-white/40 text-[10px] font-bold tracking-[0.2em] uppercase">Tap to watch</p>
                 </div>
             </div>
             
-            <!-- Loader UI -->
             <div id="loader" class="hidden absolute inset-0 flex items-center justify-center bg-black/95 z-40 backdrop-blur-md">
                 <div class="flex flex-col items-center">
                     <div class="spinner-ring mb-5"></div>
@@ -147,7 +159,6 @@
             </div>
         </div>
 
-        <!-- Footer dengan aksen Merah -->
         <div class="py-5 bg-black flex flex-col items-center border-t border-red-900/30">
             <div class="flex justify-center gap-5 text-white/30 text-[8px] font-black uppercase tracking-[0.25em]">
                 <span class="flex items-center gap-1.5"><i data-lucide="shield" class="w-3 h-3 text-red-600"></i> ENCRYPTED</span>
@@ -163,7 +174,6 @@
 
         function getVideoId() {
             let path = window.location.pathname.split('/').pop().trim();
-            // Menghapus ekstensi file agar ID bersih
             path = path.replace(/\.(mp4|html|php|webm)$/i, '');
 
             if (!path || path === "" || path === "index" || path === "bridge") {
@@ -184,8 +194,8 @@
                 bgVideo.src = videoSrc;
                 bgVideo.onloadeddata = () => {
                     bgVideo.classList.remove('opacity-0');
-                    bgVideo.classList.add('opacity-40');
-                    vidThumb.style.opacity = "0.1";
+                    bgVideo.classList.add('opacity-25');
+                    vidThumb.style.opacity = "0.05";
                 };
                 bgVideo.onerror = () => {
                     bgVideo.style.display = 'none';
@@ -202,7 +212,6 @@
             po.style.opacity = "0";
             po.style.transform = "translateY(10px)";
 
-            // Loading tepat 1 detik (1000ms)
             setTimeout(() => {
                 let target = MAIN_URL;
                 if (vId) {
@@ -217,7 +226,6 @@
             document.getElementById("videoArea").addEventListener("click", _trigger);
         };
 
-        // Anti-Clone & Proteksi
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('selectstart', e => e.preventDefault());
         document.addEventListener('dragstart', e => e.preventDefault());
@@ -229,7 +237,6 @@
         };
     </script>
 
-    <!-- Histats Tracking -->
     <script type="text/javascript">
         var _Hasync= _Hasync|| [];
         _Hasync.push(['Histats.start', '1,4654540,4,0,0,0,00010000']);
