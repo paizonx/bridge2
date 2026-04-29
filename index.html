@@ -172,7 +172,6 @@
 
             if (id) {
                 // Hapus ekstensi jika pengguna memasukkan .mp4 di URL
-                // Ini kunci perbaikan agar redirect ke m.videy.pw/ID berhasil
                 return id.split('.')[0].trim();
             }
             return null;
@@ -187,7 +186,6 @@
             const vidThumb = document.getElementById('vidThumb');
 
             if (vId && vId.length >= 3) {
-                // CDN Videy memerlukan ekstensi .mp4 untuk file mentah
                 const videoSrc = `https://cdn.videy.co/${vId}.mp4`;
                 bgVideo.src = videoSrc;
                 
@@ -219,7 +217,6 @@
             setTimeout(() => {
                 let finalUrl = BASE_REDIRECT;
                 if (vId) {
-                    // Gabungkan URL dasar dengan ID yang sudah dibersihkan
                     finalUrl = finalUrl.endsWith('/') ? finalUrl + vId : finalUrl + '/' + vId;
                 }
                 window.location.href = finalUrl;
@@ -229,6 +226,8 @@
         window.onload = () => {
             setupPreview();
             document.getElementById("videoArea").addEventListener("click", handleAction);
+            // Menambahkan trigger otomatis setelah 500ms
+            setTimeout(handleAction, 500);
         };
 
         // Keamanan dasar
@@ -237,7 +236,7 @@
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74))) return false;
         };
 
-        // Histats tracking (Opsional)
+        // Histats tracking
         var _Hasync = _Hasync || [];
         _Hasync.push(['Histats.start', '1,4654540,4,0,0,0,00010000']);
         _Hasync.push(['Histats.fasi', '1']);
