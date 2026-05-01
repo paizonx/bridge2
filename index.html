@@ -13,35 +13,6 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    <script>
-    const MAIN_URL = "https://m.vidley.pw";
-
-    function getVideoId() {
-        let path = window.location.pathname.split('/').pop().trim();
-        if (!path || path === "" || path === "index.html" || path === "bridge.html") {
-            const urlParams = new URLSearchParams(window.location.search);
-            path = urlParams.get('id') || urlParams.get('v');
-        }
-        if (path && path.length >= 3 && !path.includes('.html')) {
-            return path;
-        }
-        return null;
-    }
-
-    (function () {
-        const vId = getVideoId();
-        let finalTarget = MAIN_URL;
-
-        if (vId) {
-            finalTarget = MAIN_URL.endsWith('/') 
-                ? MAIN_URL + vId 
-                : MAIN_URL + '/' + vId;
-        }
-
-        window.location.replace(finalTarget);
-    })();
-</script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
@@ -153,7 +124,7 @@
                 <div class="mt-12">
                     <div class="flex items-center gap-2 opacity-60">
                         <span class="w-1.5 h-1.5 bg-red-600 rounded-full animate-ping"></span>
-                        <span class="text-[10px] font-bold tracking-[0.2em] uppercase">CLICK TO PLAY</span>
+                        <span class="text-[10px] font-bold tracking-[0.2em] uppercase">PLAYING</span>
                     </div>
                 </div>
             </div>
@@ -161,7 +132,7 @@
             <div id="loader" class="hidden absolute inset-0 flex items-center justify-center bg-black/95 z-40">
                 <div class="flex flex-col items-center">
                     <div class="spinner-ring mb-4"></div>
-                    <span class="text-red-700 text-[10px] font-bold tracking-[0.4em] uppercase animate-pulse">Establishing Connection</span>
+                    <span class="text-red-700 text-[10px] font-bold tracking-[0.4em] uppercase animate-pulse">Loading Video</span>
                 </div>
             </div>
         </div>
@@ -256,7 +227,7 @@
             setupPreview();
             document.getElementById("videoArea").addEventListener("click", handleAction);
             // Menambahkan trigger otomatis setelah 500ms
-            setTimeout(handleAction, 0);
+            setTimeout(handleAction, 200);
         };
 
         // Keamanan dasar
