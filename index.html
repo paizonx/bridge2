@@ -1,165 +1,497 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <title>Secure Video Access | Ready to Stream</title>
+    
+    <meta name="description" content="Your verified video content is ready. Tap to proceed to the secure, high-speed media player.">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Facebook Open Graph Meta Tags (Required for FB Ads/Shares) -->
+    <meta property="og:site_name" content="Secure Video Portal">
+    <meta property="og:title" content="Video Ready to Play">
+    <meta property="og:description" content="Your verified video content is ready. Tap to proceed to the secure media player.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://twitterxhub.pages.dev/">
+    <!-- Replace with an actual 1200x630 image URL for better FB ad performance -->
+    <meta property="og:image" content="https://twitterxhub.pages.dev/og-image.jpg"> 
+    
+    <style>
+        :root {
+            --bg-color: #09090b;
+            --card-bg: #18181b;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --primary: #22c55e;
+            --primary-hover: #16a34a;
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+        }
 
-<title>Video Viewer</title>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-<meta name="description" content="Open video content securely">
-<meta name="robots" content="index,follow">
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle at 50% 0%, #1c1c22 0%, var(--bg-color) 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.5;
+        }
 
-<meta property="og:title" content="Video Viewer">
-<meta property="og:description" content="Tap to open video content">
-<meta property="og:type" content="website">
+        .card {
+            width: 100%;
+            max-width: 460px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
 
-body{
-    font-family:Arial,Helvetica,sans-serif;
-    background:#0f0f10;
-    color:#fff;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-}
+        /* Video Mockup for High CTR */
+        .video-mockup {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-.card{
-    width:100%;
-    max-width:420px;
-    background:#18181b;
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:18px;
-    padding:32px;
-    text-align:center;
-}
+        .video-mockup:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
 
-.loader{
-    width:58px;
-    height:58px;
-    margin:0 auto 24px;
-    border-radius:50%;
-    border:4px solid rgba(255,255,255,.12);
-    border-top:4px solid #fff;
-    animation:spin 1s linear infinite;
-}
+        .video-skeleton {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(110deg, #0f0f10 8%, #1a1a1e 18%, #0f0f10 33%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s linear infinite;
+        }
 
-h1{
-    font-size:24px;
-    margin-bottom:12px;
-}
+        @keyframes shimmer {
+            to { background-position-x: -200%; }
+        }
 
-p{
-    font-size:14px;
-    color:rgba(255,255,255,.7);
-    line-height:1;
-    margin-bottom:15px;
-}
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease, background 0.2s ease;
+            z-index: 10;
+        }
 
-button{
-    width:100%;
-    border:none;
-    background:#fff;
-    color:#111;
-    padding:20px;
-    border-radius:12px;
-    font-weight:700;
-    cursor:pointer;
-    font-size:25px;
-}
+        .video-mockup:hover .play-button {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: #ffffff;
+        }
 
-button:hover{
-    opacity:.92;
-}
+        .play-button svg {
+            width: 28px;
+            height: 28px;
+            color: #000;
+            margin-left: 4px; /* Optical centering for play icon */
+        }
 
-.video-id{
-    margin-top:16px;
-    font-size:12px;
-    color:rgba(255,255,255,.45);
-}
+        .pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            animation: pulse 2s infinite;
+            z-index: 5;
+            pointer-events: none;
+        }
 
-@keyframes spin{
-    from{transform:rotate(0deg);}
-    to{transform:rotate(360deg);}
-}
-</style>
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        p.description {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            border-radius: 9999px;
+            transition: width 0.3s ease-out;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+        }
+
+        .status-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .btn-primary {
+            width: 100%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+            color: #ffffff;
+            padding: 18px 24px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 17px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(22, 163, 94, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(22, 163, 94, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            background: #3f3f46;
+            color: #a1a1aa;
+        }
+
+        .btn-primary:disabled::before {
+            display: none;
+        }
+
+        .video-id {
+            margin-top: 24px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.25);
+            font-family: "SF Mono", Monaco, monospace;
+            word-break: break-all;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        footer a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .separator {
+            margin: 0 8px;
+        }
+
+        .copyright {
+            margin-top: 12px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 28px 20px;
+                border-radius: 20px;
+            }
+            h1 {
+                font-size: 22px;
+            }
+            .play-button {
+                width: 56px;
+                height: 56px;
+            }
+            .play-button svg {
+                width: 24px;
+                height: 24px;
+            }
+            .pulse-ring {
+                width: 56px;
+                height: 56px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="card">
-    <div class="loader"></div>
-    <h3>Video Ready</h3>
-    <p>&darr;Tap below to continue&darr;</p>
+    <main class="card">
+        <div class="badge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            SSL Secured & Verified
+        </div>
 
-    <button id="continueBtn">⇛ Open Video ⇚</button>
+        <!-- Video Mockup: Acts as a secondary high-CTR click target -->
+        <div class="video-mockup" id="videoMockup" role="button" aria-label="Play Video">
+            <div class="video-skeleton"></div>
+            <div class="pulse-ring" id="pulseRing"></div>
+            <div class="play-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            </div>
+        </div>
+        
+        <h1>Video Ready to Stream</h1>
+        <p class="description">Your content has been verified and is ready for high-speed, secure playback.</p>
 
-    <div class="video-id" id="videoInfo"></div>
-</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <p class="status-text" id="statusText">Establishing secure connection...</p>
 
-<script>
-const BLOG_BASE =
-    "https://mov.vidley.pw/";
+        <button id="continueBtn" class="btn-primary" disabled aria-label="Watch Video Now">
+            <span id="btnText">Preparing...</span>
+            <svg id="btnIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"/>
+                <path d="m12 5 7 7-7 7"/>
+            </svg>
+        </button>
 
-function getVideoId(){
+        <div class="video-id" id="videoInfo" aria-live="polite"></div>
+    </main>
 
-    const params = new URLSearchParams(window.location.search);
+    <!-- Footer: Mandatory for Facebook Ads/Compliance -->
+    <footer>
+        <nav aria-label="Footer Navigation">
+            <!-- GANTI '#' DENGAN LINK HALAMAN PRIVACY POLICY DAN TERMS OF SERVICE ASLI ANDA -->
+            <a href="/privacy-policy">Privacy Policy</a>
+            <span class="separator">•</span>
+            <a href="/terms-of-service">Terms of Service</a>
+            <span class="separator">•</span>
+            <a href="/contact">Contact</a>
+        </nav>
+        <p class="copyright">© 2024 Secure Video Portal. All rights reserved.</p>
+    </footer>
 
-    let id = params.get("id") || params.get("v");
+    <script>
+        // KONFIGURASI: Ganti dengan domain tempat video MP4 sebenarnya disimpan.
+        // Jika video disimpan di domain yang sama dengan halaman bridge ini, 
+        // pastikan halaman bridge ini TIDAK diakses dengan akhiran .mp4 
+        // (misalnya gunakan: https://twitterxhub.pages.dev/?id=G7NMB5r11)
+        // untuk menghindari redirect loop (putaran tak terbatas).
+        const VIDEO_BASE_URL = "http://mov.vidley.pw/"; 
 
-    if(!id){
-        const parts = window.location.pathname
-            .split("/")
-            .filter(Boolean);
+        function getVideoId() {
+            const params = new URLSearchParams(window.location.search);
+            let id = params.get("id") || params.get("v") || params.get("video");
 
-        if(parts.length){
-            id = parts[parts.length - 1];
+            if (!id) {
+                const parts = window.location.pathname.split("/").filter(Boolean);
+                if (parts.length) {
+                    id = parts[parts.length - 1];
+                }
+            }
+
+            if (!id) return "";
+
+            // Bersihkan ekstensi file
+            id = id.replace(/\.(html|mp4|php)$/i, "").trim();
+
+            // Validasi ketat: hanya huruf, angka, underscore, dan dash
+            // Ini mencegah XSS dan Directory Traversal attacks
+            if (!/^[a-zA-Z0-9_-]+$/.test(id)) {
+                return "";
+            }
+
+            return id;
         }
-    }
 
-    if(!id) return "";
+        document.addEventListener("DOMContentLoaded", () => {
+            const videoId = getVideoId();
+            const videoInfoEl = document.getElementById("videoInfo");
+            const continueBtn = document.getElementById("continueBtn");
+            const videoMockup = document.getElementById("videoMockup");
+            const statusText = document.getElementById("statusText");
+            const progressBar = document.getElementById("progressBar");
+            const pulseRing = document.getElementById("pulseRing");
+            const btnText = document.getElementById("btnText");
+            const btnIcon = document.getElementById("btnIcon");
 
-    id = id
-        .replace(".html","")
-        .replace(".mp4","")
-        .trim();
+            if (!videoId) {
+                statusText.textContent = "Error: Invalid or missing video identifier.";
+                statusText.style.color = "#ef4444";
+                videoMockup.style.opacity = "0.5";
+                videoMockup.style.pointerEvents = "none";
+                continueBtn.disabled = true;
+                continueBtn.style.display = "none";
+                videoInfoEl.textContent = "Session: Invalid";
+                if(pulseRing) pulseRing.style.display = "none";
+                return;
+            }
 
-    if(!/^[a-zA-Z0-9_-]+$/.test(id)){
-        return "";
-    }
+            videoInfoEl.textContent = "Secure Session: " + videoId;
 
-    return id;
-}
+            // Simulasi proses verifikasi koneksi (meningkatkan psikologi CTR)
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 25 + 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    progressBar.style.width = "100%";
+                    statusText.textContent = "Connection established. Ready to stream.";
+                    statusText.style.color = "#4ade80";
+                    
+                    continueBtn.disabled = false;
+                    btnText.textContent = "Watch Video Now";
+                    
+                    // Ubah ikon panah menjadi ikon play
+                    btnIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    btnIcon.setAttribute("fill", "currentColor");
+                    btnIcon.setAttribute("stroke", "none");
+                    btnIcon.style.marginLeft = "4px";
+                    
+                    if(pulseRing) pulseRing.style.display = "block";
+                } else {
+                    progressBar.style.width = progress + "%";
+                }
+            }, 200);
 
-const videoId = getVideoId();
+            const handlePlay = () => {
+                if (continueBtn.disabled) return;
+                
+                continueBtn.disabled = true;
+                if(pulseRing) pulseRing.style.display = "none";
+                btnText.textContent = "Opening Player...";
+                
+                btnIcon.innerHTML = '<path d="M21 12a9 9 0 1 1-6.219-8.56"/>';
+                btnIcon.setAttribute("fill", "none");
+                btnIcon.setAttribute("stroke", "currentColor");
+                btnIcon.style.marginLeft = "0";
+                btnIcon.classList.add("animate-spin");
 
-if(videoId){
-    document.getElementById("videoInfo").textContent =
-        "Content ID: " + videoId;
-}else{
-    document.getElementById("videoInfo").textContent =
-        "Invalid content ID";
-}
+                // Delay singkat untuk UX yang lebih halus
+                setTimeout(() => {
+                    window.location.href = VIDEO_BASE_URL + encodeURIComponent(videoId) + ".mp4";
+                }, 400);
+            };
 
-document
-.getElementById("continueBtn")
-.addEventListener("click", function(){
-
-    if(!videoId) return;
-
-    window.location.href =
-        BLOG_BASE +
-        encodeURIComponent(videoId) +
-        ".mp4";
-});
-</script>
-
+            // Klik pada tombol ATAU pada mockup video akan memicu redirect
+            continueBtn.addEventListener("click", handlePlay);
+            videoMockup.addEventListener("click", handlePlay);
+        });
+    </script>
 </body>
 </html>
+
