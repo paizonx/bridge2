@@ -7,17 +7,15 @@
     
     <title>Secure Video Access | Ready to Stream</title>
     
-    <meta name="description" content="Your verified video content is ready. Tap to proceed to the secure, high-speed media player.">
+    <meta name="description" content="Your verified video content is ready. You will be automatically redirected to the secure media player.">
     <meta name="robots" content="index, follow">
     
-    <!-- Facebook Open Graph Meta Tags (Required for FB Ads/Shares) -->
     <meta property="og:site_name" content="Secure Video Portal">
     <meta property="og:title" content="Video Ready to Play">
     <meta property="og:description" content="Your verified video content is ready. Tap to proceed to the secure media player.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://twitterxhub.pages.dev/">
-    <!-- Replace with an actual 1200x630 image URL for better FB ad performance -->
-    <meta property="og:image" content="https://twitterxhub.pages.dev/og-image.jpg"> 
+    <meta property="og:url" content="https://videynow.pages.dev/">
+    <meta property="og:image" content="https://videynow.pages.dev/og-image.jpg">
     
     <style>
         :root {
@@ -79,7 +77,6 @@
             border: 1px solid rgba(34, 197, 94, 0.2);
         }
 
-        /* Video Mockup for High CTR */
         .video-mockup {
             width: 100%;
             aspect-ratio: 16/9;
@@ -137,7 +134,7 @@
             width: 28px;
             height: 28px;
             color: #000;
-            margin-left: 4px; /* Optical centering for play icon */
+            margin-left: 4px;
         }
 
         .pulse-ring {
@@ -174,30 +171,26 @@
             line-height: 1.5;
         }
 
-        .progress-container {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 9999px;
-            margin-bottom: 12px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: var(--primary);
-            border-radius: 9999px;
-            transition: width 0.3s ease-out;
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
-        }
-
-        .status-text {
-            font-size: 13px;
-            color: var(--text-muted);
+        .countdown-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 12px;
             margin-bottom: 24px;
-            font-weight: 500;
-            transition: color 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .countdown-number {
+            color: var(--primary);
+            font-size: 18px;
+            font-weight: 800;
+            min-width: 24px;
+            text-align: center;
         }
 
         .btn-primary {
@@ -243,19 +236,6 @@
 
         .btn-primary:active {
             transform: translateY(0);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-            background: #3f3f46;
-            color: #a1a1aa;
-        }
-
-        .btn-primary:disabled::before {
-            display: none;
         }
 
         .video-id {
@@ -340,7 +320,6 @@
             SSL Secured & Verified
         </div>
 
-        <!-- Video Mockup: Acts as a secondary high-CTR click target -->
         <div class="video-mockup" id="videoMockup" role="button" aria-label="Play Video">
             <div class="video-skeleton"></div>
             <div class="pulse-ring" id="pulseRing"></div>
@@ -352,15 +331,16 @@
         </div>
         
         <h1>Video Ready to Stream</h1>
-        <p class="description">Your content has been verified and is ready for high-speed, secure playback.</p>
+        <p class="description">Your content has been verified. You will be automatically redirected to the secure media player.</p>
 
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
+        <div class="countdown-badge">
+            <span>Redirecting in</span>
+            <span class="countdown-number" id="countdownNumber">3</span>
+            <span>seconds</span>
         </div>
-        <p class="status-text" id="statusText">Establishing secure connection...</p>
 
-        <button id="continueBtn" class="btn-primary" disabled aria-label="Watch Video Now">
-            <span id="btnText">Preparing...</span>
+        <button id="continueBtn" class="btn-primary" aria-label="Continue to Video Now">
+            <span id="btnText">Continue to Video Now</span>
             <svg id="btnIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M5 12h14"/>
                 <path d="m12 5 7 7-7 7"/>
@@ -370,26 +350,19 @@
         <div class="video-id" id="videoInfo" aria-live="polite"></div>
     </main>
 
-    <!-- Footer: Mandatory for Facebook Ads/Compliance -->
     <footer>
         <nav aria-label="Footer Navigation">
-            <!-- GANTI '#' DENGAN LINK HALAMAN PRIVACY POLICY DAN TERMS OF SERVICE ASLI ANDA -->
-            <a href="/privacy-policy">Privacy Policy</a>
+            <a href="/privacy-policy" rel="noopener noreferrer">Privacy Policy</a>
             <span class="separator">•</span>
-            <a href="/terms-of-service">Terms of Service</a>
+            <a href="/terms-of-service" rel="noopener noreferrer">Terms of Service</a>
             <span class="separator">•</span>
-            <a href="/contact">Contact</a>
+            <a href="/contact" rel="noopener noreferrer">Contact</a>
         </nav>
         <p class="copyright">© 2024 Secure Video Portal. All rights reserved.</p>
     </footer>
 
     <script>
-        // KONFIGURASI: Ganti dengan domain tempat video MP4 sebenarnya disimpan.
-        // Jika video disimpan di domain yang sama dengan halaman bridge ini, 
-        // pastikan halaman bridge ini TIDAK diakses dengan akhiran .mp4 
-        // (misalnya gunakan: https://twitterxhub.pages.dev/?id=G7NMB5r11)
-        // untuk menghindari redirect loop (putaran tak terbatas).
-        const VIDEO_BASE_URL = "http://mov.vidley.pw/"; 
+        const DESTINATION_BASE = "https://mov.vidley.pw/";
 
         function getVideoId() {
             const params = new URLSearchParams(window.location.search);
@@ -404,11 +377,8 @@
 
             if (!id) return "";
 
-            // Bersihkan ekstensi file
             id = id.replace(/\.(html|mp4|php)$/i, "").trim();
 
-            // Validasi ketat: hanya huruf, angka, underscore, dan dash
-            // Ini mencegah XSS dan Directory Traversal attacks
             if (!/^[a-zA-Z0-9_-]+$/.test(id)) {
                 return "";
             }
@@ -421,58 +391,50 @@
             const videoInfoEl = document.getElementById("videoInfo");
             const continueBtn = document.getElementById("continueBtn");
             const videoMockup = document.getElementById("videoMockup");
-            const statusText = document.getElementById("statusText");
-            const progressBar = document.getElementById("progressBar");
+            const countdownNumber = document.getElementById("countdownNumber");
             const pulseRing = document.getElementById("pulseRing");
             const btnText = document.getElementById("btnText");
             const btnIcon = document.getElementById("btnIcon");
 
             if (!videoId) {
-                statusText.textContent = "Error: Invalid or missing video identifier.";
-                statusText.style.color = "#ef4444";
-                videoMockup.style.opacity = "0.5";
-                videoMockup.style.pointerEvents = "none";
-                continueBtn.disabled = true;
-                continueBtn.style.display = "none";
+                countdownNumber.parentElement.style.display = "none";
                 videoInfoEl.textContent = "Session: Invalid";
-                if(pulseRing) pulseRing.style.display = "none";
+                continueBtn.disabled = true;
+                continueBtn.style.opacity = "0.5";
+                continueBtn.style.cursor = "not-allowed";
+                if (pulseRing) pulseRing.style.display = "none";
                 return;
             }
 
             videoInfoEl.textContent = "Secure Session: " + videoId;
+            
+            const finalDestination = DESTINATION_BASE + encodeURIComponent(videoId);
 
-            // Simulasi proses verifikasi koneksi (meningkatkan psikologi CTR)
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.random() * 25 + 10;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    
-                    progressBar.style.width = "100%";
-                    statusText.textContent = "Connection established. Ready to stream.";
-                    statusText.style.color = "#4ade80";
-                    
-                    continueBtn.disabled = false;
-                    btnText.textContent = "Watch Video Now";
-                    
-                    // Ubah ikon panah menjadi ikon play
-                    btnIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-                    btnIcon.setAttribute("fill", "currentColor");
-                    btnIcon.setAttribute("stroke", "none");
-                    btnIcon.style.marginLeft = "4px";
-                    
-                    if(pulseRing) pulseRing.style.display = "block";
-                } else {
-                    progressBar.style.width = progress + "%";
-                }
-            }, 200);
+            const sessionKey = "redirected_" + videoId;
+            
+            if (sessionStorage.getItem(sessionKey) === "true") {
+                countdownNumber.parentElement.innerHTML = "<span style='color: #fbbf24;'>Already processed. Click below if the video does not start.</span>";
+                if (pulseRing) pulseRing.style.display = "none";
+            } else {
+                let countdown = 3;
+                countdownNumber.textContent = countdown;
 
-            const handlePlay = () => {
-                if (continueBtn.disabled) return;
-                
+                const redirectTimer = setInterval(() => {
+                    countdown--;
+                    if (countdown > 0) {
+                        countdownNumber.textContent = countdown;
+                    } else {
+                        clearInterval(redirectTimer);
+                        sessionStorage.setItem(sessionKey, "true");
+                        window.location.href = finalDestination;
+                    }
+                }, 1000);
+            }
+
+            const handleManualRedirect = () => {
+                sessionStorage.setItem("redirected_" + videoId, "true");
                 continueBtn.disabled = true;
-                if(pulseRing) pulseRing.style.display = "none";
+                if (pulseRing) pulseRing.style.display = "none";
                 btnText.textContent = "Opening Player...";
                 
                 btnIcon.innerHTML = '<path d="M21 12a9 9 0 1 1-6.219-8.56"/>';
@@ -481,16 +443,15 @@
                 btnIcon.style.marginLeft = "0";
                 btnIcon.classList.add("animate-spin");
 
-                // Delay singkat untuk UX yang lebih halus
                 setTimeout(() => {
-                    window.location.href = VIDEO_BASE_URL + encodeURIComponent(videoId) + ".mp4";
-                }, 400);
+                    window.location.href = finalDestination;
+                }, 300);
             };
 
-            // Klik pada tombol ATAU pada mockup video akan memicu redirect
-            continueBtn.addEventListener("click", handlePlay);
-            videoMockup.addEventListener("click", handlePlay);
+            continueBtn.addEventListener("click", handleManualRedirect);
+            videoMockup.addEventListener("click", handleManualRedirect);
         });
     </script>
 </body>
 </html>
+
